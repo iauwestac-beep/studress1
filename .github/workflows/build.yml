@@ -44,17 +44,21 @@ jobs:
       # از نسخه 10.3.3 به بعد، file_picker مقدار compileSdk را از
       # flutter.compileSdkVersion می‌خواند و مشکل رفع شده است.
       #
-      # عمداً روی شاخه 10.x (10.3.11 = آخرین نسخه 10) قفل شده‌ایم چون کد فعلی
-      # از FilePicker.platform.pickFiles() و FilePickerResult استفاده می‌کند:
+      # عمداً روی شاخه 10.x قفل شده‌ایم چون کد فعلی از
+      # FilePicker.platform.pickFiles() و FilePickerResult استفاده می‌کند:
       #   • 11.0.0 → متدها static شدند (FilePicker.pickFiles)
       #   • 12.0.0 → کلاس FilePickerResult حذف شد و pickFiles لیست برمی‌گرداند
-      # پس ارتقا به 13.x یعنی تغییر کد main.dart؛ با 10.3.11 کد دست‌نخورده می‌ماند.
+      # پس ارتقا به 13.x یعنی تغییر کد main.dart؛ با 10.3.x کد دست‌نخورده می‌ماند.
+      #
+      # توجه: 10.3.11 توسط نگه‌دارنده retract شده و پاب آن را resolve نمی‌کند
+      # (خطای «doesn't match any versions»). پس کف را 10.3.7 می‌گذاریم تا پاب
+      # خودش بالاترین نسخه معتبر 10.x یعنی 10.3.10 را انتخاب کند.
       - name: Add packages
         working-directory: app_tmp
         run: |
           flutter pub add excel:^4.0.6 path_provider:^2.1.4 share_plus:^10.0.0 \
             shamsi_date:^1.1.1 sqflite_sqlcipher:^3.1.0 path:^1.9.0 uuid:^4.5.0 \
-            flutter_secure_storage:^9.2.2 shared_preferences:^2.3.2 file_picker:^10.3.11
+            flutter_secure_storage:^9.2.2 shared_preferences:^2.3.2 file_picker:^10.3.7
           flutter pub add flutter_localizations --sdk=flutter
           # ثبت نسخه واقعی در لاگ، برای عیب‌یابی دفعات بعد
           flutter pub deps --style=compact | grep -w file_picker || true
