@@ -11,6 +11,9 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # برای انتشار APK در Releases لازم است (توکن پیش‌فرض فقط read است)
+    permissions:
+      contents: write
     steps:
       - uses: actions/checkout@v4
 
@@ -94,3 +97,15 @@ jobs:
         with:
           name: dress-app-apk
           path: app_tmp/build/app/outputs/flutter-apk/app-release.apk
+
+      # Artifacts فقط از داخل صفحهٔ Actions و با حساب واردشده قابل دانلودند
+      # (روی موبایل هم دکمه‌اش اغلب دیده نمی‌شود). این استپ همان APK را به
+      # Releases منتشر می‌کند تا یک لینک ثابت و مستقیم داشته باشید:
+      #   https://github.com/iauwestac-beep/studress1/releases/latest/download/app-release.apk
+      - name: Publish APK to Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: apk-${{ github.run_number }}
+          name: APK build ${{ github.run_number }}
+          files: app_tmp/build/app/outputs/flutter-apk/app-release.apk
+          generate_release_notes: false
